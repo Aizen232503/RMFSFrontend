@@ -1,6 +1,6 @@
 <template>
   <div class="gif-container">
-    <img src="../../0_status.gif" alt="运行状态" />
+    <img src="../../public/0_status.gif" alt="运行状态" />
   </div>
 </template>
 

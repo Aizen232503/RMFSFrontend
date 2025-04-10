@@ -84,9 +84,11 @@ RMFSFrontend/
 │   ├── assets/         # 静态资源，包含图片等
 │   └── api/            # 接口请求，定义了请求的接口配置
 ├── public/             # 公共资源
+├── dist/               # 生产环境静态代码
 ├── mock/               # Mock 数据，用于模拟接口请求
 ├── package.json        # 项目依赖配置
-└── README.md           # 项目说明文件
+├── README.md           # 项目说明文件
+└── .gitignore          # Git 忽略文件配置
 ```
 
 ---
