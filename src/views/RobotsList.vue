@@ -7,6 +7,9 @@
     </el-table-column> -->
 
     <el-table-column type="index" prop="index" label="序号" width="50" align="center" header-align="center">
+      <template #default="scope">
+        <p> {{ (scope.$index + 1) + pageSize * (currentPage - 1) }}</p>
+      </template>
     </el-table-column>
 
     <el-table-column prop="robot_id" width="150" label="机器人ID" align="center">
@@ -15,7 +18,7 @@
     <el-table-column prop="order_id" width="250" label="当前订单" align="center">
     </el-table-column>
 
-    <el-table-column prop="station" width="250" label="拣选站" align="center">
+    <el-table-column prop="station_id" width="250" label="拣选站" align="center">
     </el-table-column>
 
     <el-table-column prop="status" width="150" label="状态" align="center">
@@ -32,14 +35,6 @@
           <Timer />
         </el-icon>
         <span style="margin-left: 10px">{{ scope.row.last_updated }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column prop="battery" width="200" label="电量" align="center">
-      <template v-slot="scope">
-        <el-progress :percentage="parseInt(scope.row.battery.replace('%', ''))" :text-inside="true" :stroke-width="22"
-          :color="app.proxy.getProgressColor(parseInt(scope.row.battery.replace('%', '')))">
-        </el-progress>
       </template>
     </el-table-column>
 
@@ -60,7 +55,11 @@
     </el-table-column>
   </el-table>
 
-
+  <div class="flex justify-center mt-4"><el-pagination align="center" background
+      @current-change="handleCurrentPageChange" @size-change="handlePageSizeChange" v-model:current-page="currentPage"
+      :page-size="pageSize" :page-sizes="[50, 100]" :pager-count="15" layout="total, sizes, prev, pager, next, jumper"
+      :total="itemsCount">
+    </el-pagination></div>
 </template>
 
 <script setup lang="ts" name="RobotsList">
@@ -84,7 +83,7 @@ const tableData = ref([]);
 
 // 分页相关
 const currentPage = ref(1);
-// const pageSize = ref(100);
+const pageSize = ref(100);
 const itemsCount = ref(0);
 // 编辑模式相关
 const editingRow = ref(null);
@@ -95,7 +94,7 @@ const getRowKey = (row) => (row.order_id)
 const getRobotsList = async () => {
   if (route.path === '/robots') {
     try {
-      const data = await api.getRobotsData(
+      const data = await api.getRobotsData(currentPage.value, pageSize.value
       );
       tableData.value = data.results;
       itemsCount.value = data.count;
@@ -110,7 +109,7 @@ const getRobotsList = async () => {
 }
 let intervalId;
 // 防抖函数，暂停轮询
-const debounceFetchRobots = app.proxy.debounce(() => {
+const debouncefetchRobots = app.proxy.debounce(() => {
   clearInterval(intervalId);
   intervalId = setInterval(() => {
     if (!editingColumn.value && !editingRow.value) {
@@ -119,25 +118,34 @@ const debounceFetchRobots = app.proxy.debounce(() => {
   }, 3000)
 }, 3000);
 // 定时获取订单数据
-const FetchRobots = () => {
+const fetchRobots = () => {
   if (!editingColumn.value && !editingRow.value) {
     clearInterval(intervalId); // 暂停轮询
     getRobotsList()
       .then(() => {
-        debounceFetchRobots(1000); // 数据获取成功后重新启动轮询并防抖
+        debouncefetchRobots(1000); // 数据获取成功后重新启动轮询并防抖
       })
       .catch(() => {
-        intervalId = setInterval(FetchRobots, 3000); // 数据获取失败后立即重新启动轮询
+        intervalId = setInterval(fetchRobots, 3000); // 数据获取失败后立即重新启动轮询
       });
   }
 };
-
+// 页码变化
+const handleCurrentPageChange = (val) => {
+  currentPage.value = val;
+  fetchRobots();
+}
+// 分页大小变化
+const handlePageSizeChange = (val) => {
+  pageSize.value = val;
+  fetchRobots();
+}
 onMounted(() => {
   // 获取订单数据
-  FetchRobots();
+  fetchRobots();
 
   // 当组件挂载时，设置定时器
-  // intervalId = setInterval(FetchRobots, 3000);
+  // intervalId = setInterval(fetchRobots, 3000);
 
 });
 

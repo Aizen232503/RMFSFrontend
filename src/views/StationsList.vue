@@ -1,12 +1,16 @@
 <template>
-  <el-table ref="tableRef" :data="tableData" :row-key="getRowKey"  max-height="800"
-    style="width:90%;margin-top:100px;margin:auto" scrollbar-always-on header-align="center" :row-style="{height:'90px'}" stripe>
+  <el-table ref="tableRef" :data="tableData" :row-key="getRowKey" max-height="800"
+    style="width:90%;margin-top:100px;margin:auto" scrollbar-always-on header-align="center"
+    :row-style="{ height: '90px' }" stripe>
 
     <!-- <el-table-column type="selection" prop="selection" width="30" align="center" header-align="center"
       reserve-selection>
     </el-table-column> -->
 
     <el-table-column type="index" prop="index" label="序号" width="50" align="center" header-align="center">
+      <template #default="scope">
+        <p> {{ (scope.$index + 1) + pageSize * (currentPage - 1) }}</p>
+      </template>
     </el-table-column>
 
 
@@ -38,7 +42,7 @@
 
     <el-table-column label="操作" align="center" width="150" fixed="right">
       <template #default="scope">
-       <el-popover trigger="hover" placement="top" width="240px">
+        <el-popover trigger="hover" placement="top" width="240px">
           <p>站台ID: {{ scope.row.station_id }}</p>
           <p>状态: {{ scope.row.status }}</p>
           <p>当前订单: {{ scope.row.order_id }}</p>
@@ -53,6 +57,11 @@
   </el-table>
 
 
+  <div class="flex justify-center mt-4"><el-pagination align="center" background
+      @current-change="handleCurrentPageChange" @size-change="handlePageSizeChange" v-model:current-page="currentPage"
+      :page-size="pageSize" :page-sizes="[5, 10, 20]" :pager-count="15" layout="total, sizes, prev, pager, next, jumper"
+      :total="itemsCount">
+    </el-pagination></div>
 </template>
 
 <script setup lang="ts" name="StationsList">
@@ -76,7 +85,7 @@ const tableData = ref([]);
 
 // 分页相关
 const currentPage = ref(1);
-// const pageSize = ref(100);
+const pageSize = ref(10);
 const itemsCount = ref(0);
 // 编辑模式相关
 const editingRow = ref(null);
@@ -124,7 +133,16 @@ const fetchStations = () => {
       });
   }
 };
-
+// 页码变化
+const handleCurrentPageChange = (val) => {
+  currentPage.value = val;
+  fetchStations();
+}
+// 分页大小变化
+const handlePageSizeChange = (val) => {
+  pageSize.value = val;
+  fetchStations();
+}
 onMounted(() => {
   // 获取订单数据
   fetchStations();

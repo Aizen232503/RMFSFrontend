@@ -104,12 +104,6 @@ const menuData = [
         label: "数据分析",
         icon: "Histogram",
     },
-    {
-        path: "/status",
-        name: "RunningStatus",
-        label: "运行实况",
-        icon: "Monitor",
-    },
 ]
 const currentUser = useUserStore().currentUser
 // const validMenuData = computed(() => {

@@ -1,7 +1,12 @@
 import { http } from '@/utils/request'
 
-export const getOrdersData = (): Promise<any> => {
-    //返回promise对象
+/**
+ * 获取订单数据
+ * @param page 当前页码
+ * @param pageSize 每页条数
+ * @returns Promise<any>
+ */
+export const getOrdersData = (type: string = "unassigned", page: number = 1, pageSize: number = 100): Promise<any> => {
     return http({
         url: 'orders/',
         headers: {
@@ -9,10 +14,17 @@ export const getOrdersData = (): Promise<any> => {
             'showLoading': false
         },
         method: 'get',
+        params: { type, page, pageSize } // 传递分页参数
     })
 }
-export const getRobotsData = (): Promise<any> => {
-    //返回promise对象
+
+/**
+ * 获取机器人数据
+ * @param page 当前页码
+ * @param pageSize 每页条数
+ * @returns Promise<any>
+ */
+export const getRobotsData = (page: number = 1, pageSize: number = 100): Promise<any> => {
     return http({
         url: 'robots/',
         headers: {
@@ -20,10 +32,17 @@ export const getRobotsData = (): Promise<any> => {
             'showLoading': false
         },
         method: 'get',
+        params: { page, pageSize } // 传递分页参数
     })
 }
-export const getStationsData = (): Promise<any> => {
-    //返回promise对象
+
+/**
+ * 获取拣选站数据
+ * @param page 当前页码
+ * @param pageSize 每页条数
+ * @returns Promise<any>
+ */
+export const getStationsData = (page: number = 1, pageSize: number = 10): Promise<any> => {
     return http({
         url: 'stations/',
         headers: {
@@ -31,5 +50,6 @@ export const getStationsData = (): Promise<any> => {
             'showLoading': false
         },
         method: 'get',
+        params: { page, pageSize } // 传递分页参数
     })
 }

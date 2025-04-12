@@ -1,7 +1,7 @@
 {
-  "name": "frontend_om",
+  "name": "rmfs_frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,6 +21,7 @@
     "element-plus": "^2.8.1",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
+    "mitt": "^3.0.1",
     "mockjs": "^1.1.0",
     "ol": "^10.1.0",
     "pinia": "^2.2.2",

@@ -1,4 +1,9 @@
 <template>
+  <el-tabs v-model="currentOrderType">
+    <el-tab-pane v-for="orderType in validOrderTypes" :label="getOrderTypeLabel(orderType)"
+      :name="orderType"></el-tab-pane>
+  </el-tabs>
+
   <el-table ref="tableRef" :data="tableData" :row-key="getRowKey" max-height="800"
     style="width:90%;margin-top:100px;margin:auto" scrollbar-always-on header-align="center" stripe>
 
@@ -7,6 +12,9 @@
     </el-table-column> -->
 
     <el-table-column type="index" prop="index" label="序号" width="50" align="center" header-align="center">
+      <template #default="scope">
+        <p> {{ (scope.$index + 1) + pageSize * (currentPage - 1) }}</p>
+      </template>
     </el-table-column>
 
 
@@ -29,7 +37,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="batch_id" width="150" label="批次" align="center">
+    <el-table-column prop="batch_id" width="90" label="批次" align="center">
     </el-table-column>
 
     <el-table-column prop="timestamp" label="创建时间" align="center">
@@ -41,10 +49,16 @@
       </template>
     </el-table-column>
 
+    <el-table-column prop="robot_id" width="90" label="机器人" align="center">
+    </el-table-column>
+
+    <el-table-column prop="station_id" width="90" label="所在站台" align="center">
+    </el-table-column>
+
     <el-table-column prop="SKU_detail" width="150" label="SKU详情" align="center">
     </el-table-column>
 
-    <el-table-column prop="order_process" width="200" label="进度" align="center">
+    <el-table-column prop="order_process" width="180" label="进度" align="center">
       <template v-slot="scope">
         <el-progress :percentage="parseInt(scope.row.order_process.replace('%', ''))" :text-inside="true"
           :stroke-width="22" :color="app.proxy.getProgressColor(parseInt(scope.row.order_process.replace('%', '')))">
@@ -70,6 +84,11 @@
     </el-table-column>
   </el-table>
 
+  <div class="flex justify-center mt-4"><el-pagination align="center" background
+      @current-change="handleCurrentPageChange" @size-change="handlePageSizeChange" v-model:current-page="currentPage"
+      :page-size="pageSize" :page-sizes="[50, 100]" :pager-count="15" layout="total, sizes, prev, pager, next, jumper"
+      :total="itemsCount">
+    </el-pagination></div>
 
 </template>
 
@@ -89,12 +108,12 @@ const tableRef = ref(null)
 const acceptRef = ref(null)
 const replyRef = ref(null)
 // 表格相关
-const currentOrderType = ref("All");
+const currentOrderType = ref("unassigned");
 const tableData = ref([]);
 
 // 分页相关
 const currentPage = ref(1);
-// const pageSize = ref(100);
+const pageSize = ref(100);
 const itemsCount = ref(0);
 // 编辑模式相关
 const editingRow = ref(null);
@@ -105,7 +124,7 @@ const getRowKey = (row) => (row.order_id)
 const getOrdersList = async () => {
   if (route.path === '/orders') {
     try {
-      const data = await api.getOrdersData(
+      const data = await api.getOrdersData(currentOrderType.value, currentPage.value, pageSize.value
       );
       tableData.value = data.results;
       itemsCount.value = data.count;
@@ -141,8 +160,49 @@ const fetchOrders = () => {
       });
   }
 };
-
+// 页码变化
+const handleCurrentPageChange = (val) => {
+  currentPage.value = val;
+  fetchOrders();
+}
+// 分页大小变化
+const handlePageSizeChange = (val) => {
+  pageSize.value = val;
+  fetchOrders();
+}
+// 订单类型选项卡
+const validOrderTypes = ref(['unassigned', 'assigned'])
+// 订单类型选项标签
+const getOrderTypeLabel = (orderType) => {
+  switch (orderType) {
+    // case 'all':
+    //   return '全部订单';
+    case 'unassigned':
+      return '未分配订单';
+    case 'assigned':
+      return '已分配订单';
+    default:
+      return orderType;
+  }
+}
+// 当订单类型变化时，清空排序、筛选、页码、多选
+watch(currentOrderType, () => {
+  router.push({ query: { type: currentOrderType.value } })
+  currentPage.value = 1;
+  itemsCount.value = 0
+  tableData.value = [];
+  fetchOrders();
+});
 onMounted(() => {
+  // 获取路由中的订单类型参数
+  const type = route.query.type as any;
+  if (type) {
+    currentOrderType.value = type;
+  }
+  else {
+    currentOrderType.value = "unassigned";
+    router.push({ query: { type: currentOrderType.value } })
+  }
   // 获取订单数据
   fetchOrders();
 

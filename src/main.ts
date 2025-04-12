@@ -2,10 +2,8 @@ import { createApp } from 'vue'
 import './tailwind.css'
 import './style.css'
 import './assets/fonts/fonts.css'
-
-import '../mock/index.ts'
 import { setupProdMockServer } from '../src/mockProdServer.ts'
-
+import('../mock/index.ts')
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
@@ -29,8 +27,6 @@ import "element-plus/theme-chalk/el-message.css";
 
 // 引入全局函数
 import global from './utils/global.ts'
-// 处理Chrome事件报错
-// import 'default-passive-events'
 const app = createApp(App)
 export const pinia = createPinia().use(piniaPluginPersistedstate)
 const globalFunctions = app.use(global)
@@ -52,4 +48,5 @@ techUILite(app).then(() => {
     }
     app.mount('#app')
 })
+
 export { globalFunctions }

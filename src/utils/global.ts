@@ -94,18 +94,18 @@ export default {
             return value
         }
         app.config.globalProperties.getProgressColor = (percentage) => {
-            if (percentage < 10) {
+            if (percentage < 20) {
                 return '#ff4d4f'; // 深红色，表示非常低的进度
-            } else if (percentage < 30) {
+            } else if (percentage < 40) {
                 return '#f56c6c'; // 红色，表示低进度
-            } else if (percentage < 50) {
-                return '#e6a23c'; // 橙色，表示中等偏低进度
-            } else if (percentage < 70) {
-                return '#fadb14'; // 黄色，表示中等进度
-            } else if (percentage < 90) {
-                return '#67c23a'; // 绿色，表示中等偏高进度
+            } else if (percentage < 60) {
+                return '#e6a23c'; // 橙色，表示中等进度
+            } else if (percentage < 80) {
+                return '#fadb14'; // 黄色，表示偏高进度
+            } else if (percentage < 100) {
+                return '#67c23a'; // 绿色，表示高进度
             } else {
-                return '#52c41a'; // 深绿色，表示接近完成
+                return '#52c41a'; // 深绿色，表示完成
             }
         };
         app.config.globalProperties.isEmpty = (value) => {

@@ -18,11 +18,13 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia';
 import axios from 'axios'
+import eventBus from '@/utils/eventBus';
 
 import { useUserStore } from "@/store/user";
 import { useParamsStore } from '@/store/params'
 
 import ParametersBoard from '@/components/ParametersBoard.vue'
+import { initializeSystem } from '../../mock/index.ts'
 
 const userStore = useUserStore()
 
@@ -72,6 +74,7 @@ const updateParams = async () => {
     type: "success",
     message: "初始化配置成功",
   });
+  eventBus.emit('initializeSystem', { orderCount: 0, robotCount: 10000 });
   // console.log(params.value)
   // try {
   //   await api.updateParams(params.value)
