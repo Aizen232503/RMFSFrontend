@@ -3,7 +3,7 @@
         <div style="height: 100%;">
             <div class="flex items-center justify-center">
                 <h2 style="font-family: AliHYAiHei;margin-top: 20px;margin-bottom: 20px;font-size:16px"> {{ info.label
-                }}
+                    }}
                 </h2>
             </div>
 

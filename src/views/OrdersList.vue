@@ -1,8 +1,16 @@
 <template>
+
   <el-tabs v-model="currentOrderType">
     <el-tab-pane v-for="orderType in validOrderTypes" :label="getOrderTypeLabel(orderType)"
       :name="orderType"></el-tab-pane>
   </el-tabs>
+
+  <template v-if="savedParams.扰动类型 === '有'">
+    <el-button type="primary" @click="handleEmergency('insert')">作业插入</el-button>
+    <el-button type="danger" @click="handleEmergency('stuck')">作业故障</el-button>
+    <el-button type="warning" @click="handleEmergency('modify')">作业修改</el-button>
+    <el-button type="infoinfo" @click="handleEmergency('cancel')">作业取消</el-button>
+  </template>
 
   <el-table ref="tableRef" :data="tableData" :row-key="getRowKey" max-height="800"
     style="width:90%;margin-top:100px;margin:auto" scrollbar-always-on header-align="center" stripe>
@@ -21,7 +29,7 @@
     <el-table-column prop="order_id" width="250" label="订单ID" align="center">
     </el-table-column>
 
-    <el-table-column prop="priority" width="150" label="优先级" align="center">
+    <el-table-column prop="priority" width="50" label="优先级" align="center">
       <template v-slot="scope">
         <el-tag :type="app.proxy.getTagType(scope.row.priority, 'order_priority')">{{
           scope.row.priority
@@ -29,7 +37,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="status" width="150" label="订单状态" align="center">
+    <el-table-column prop="status" width="100" label="订单状态" align="center">
       <template v-slot="scope">
         <el-tag :type="app.proxy.getTagType(scope.row.status, 'order_status')">{{
           scope.row.status
@@ -37,7 +45,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="batch_id" width="90" label="批次" align="center">
+    <el-table-column prop="batch_id" width="50" label="批次" align="center">
     </el-table-column>
 
     <el-table-column prop="timestamp" label="创建时间" align="center">
@@ -50,15 +58,21 @@
     </el-table-column>
 
     <el-table-column prop="robot_id" width="90" label="机器人" align="center">
+      <template v-slot="scope">
+        <p>{{ scope.row.robot_id ?? '未分配' }}</p>
+      </template>
     </el-table-column>
 
     <el-table-column prop="station_id" width="90" label="所在站台" align="center">
+      <template v-slot="scope">
+        <p>{{ scope.row.station_id ?? '未分配' }}</p>
+      </template>
     </el-table-column>
 
     <el-table-column prop="SKU_detail" width="150" label="SKU详情" align="center">
     </el-table-column>
 
-    <el-table-column prop="order_process" width="180" label="进度" align="center">
+    <el-table-column prop="order_process" width="150" label="进度" align="center">
       <template v-slot="scope">
         <el-progress :percentage="parseInt(scope.row.order_process.replace('%', ''))" :text-inside="true"
           :stroke-width="22" :color="app.proxy.getProgressColor(parseInt(scope.row.order_process.replace('%', '')))">
@@ -66,7 +80,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="操作" align="center" width="150" fixed="right">
+    <el-table-column label="详情" align="center" width="150" fixed="right">
       <template #default="scope">
         <el-popover trigger="hover" placement="top" width="240px">
           <p>订单ID: {{ scope.row.order_id }}</p>
@@ -82,6 +96,12 @@
         </el-popover>
       </template>
     </el-table-column>
+
+    <!-- <el-table-column label="操作" align="center" width="100" fixed="right">
+      <template #default="scope">
+        <el-button type="danger" size="small" @click="handleEmergency(scope.row)">紧急插单</el-button>
+      </template>
+    </el-table-column> -->
   </el-table>
 
   <div class="flex justify-center mt-4"><el-pagination align="center" background
@@ -98,6 +118,10 @@ import { useUserStore } from "@/store/user";
 import { useRouter, useRoute } from 'vue-router';
 import CustomTag from '@/components/CustomTag.vue';
 
+import { useParamsStore } from '@/store/params'
+const paramsStore = useParamsStore()
+const { savedParams
+} = storeToRefs(paramsStore)
 import * as api from "@/api/";
 const app = getCurrentInstance() as any
 
@@ -210,7 +234,81 @@ onMounted(() => {
   // intervalId = setInterval(fetchOrders, 3000);
 
 });
+const generateOrderId = () => {
+  const currentDate = new Date();
+  const datePart = `${currentDate.getFullYear()}${String(currentDate.getMonth() + 1).padStart(2, '0')}${String(currentDate.getDate()).padStart(2, '0')}`; // 当前日期部分
+  const orderId = `O-${datePart}-1${String(Math.floor(Math.random() * 10000) + 1).padStart(5, '0')}`; // 格式化订单ID
+  return orderId;
+};
 
+const generateRobotId = () => {
+  const orderId = `R-1${String(Math.floor(Math.random() * 100000) + 1).padStart(5, '0')}`; // 格式化机器人ID
+  return orderId;
+};
+
+const generateStationId = () => {
+  const orderId = `S-${String(Math.floor(Math.random() * 50) + 1).padStart(3, '0')}`; // 格式化拣选站ID
+  return orderId;
+};
+// 处理紧急插单
+const handleEmergency = (type) => {
+  let confirm = '', message1 = '', message2 = ''
+  const orderId = generateOrderId();
+  const robotId = generateRobotId();
+  const stationId = generateStationId();
+
+  switch (type) {
+    case 'insert':
+      confirm = `是否进行作业插入`
+      message1 = `正在进行作业插入，已生成优先度为紧急的订单，订单编号${orderId}`
+      message2 = `订单${orderId}已经被成功分配并优先处理，对应拣选站为${stationId}，机器人为${robotId}`;
+      break
+
+    case 'stuck':
+      confirm = `是否进行作业故障`
+      message1 = `正在进行作业故障，订单${orderId}的执行机器人${robotId}出现故障`
+      message2 = `订单${orderId}已经被成功二次分配，对应拣选站为${stationId}，机器人为${generateRobotId()}`;
+      break
+    case 'modify':
+      confirm = `是否进行作业修改`
+      message1 = `正在进行作业修改，订单${orderId}的内容SKU种类已经改变`
+      message2 = `订单${orderId}已经被成功二次分配，增加机器人${robotId}来完成订单`;
+      break
+    case 'cancel':
+      confirm = `是否进行作业取消`
+      message1 = `正在进行作业取消，将取消订单${orderId}的执行`
+      message2 = `订单${orderId}已经被成功取消，执行该订单的机器人${robotId}和拣选站${stationId}，对应时段已经被释放`;
+      break
+  }
+
+  app.proxy.$confirm(confirm, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 生成订单ID
+    app.proxy.$message({
+      type: 'info',
+      message: message1,
+      duration: 2000
+
+    });
+    // 模拟成功提示，过3秒
+    setTimeout(() => {
+      app.proxy.$message({
+        type: 'success',
+        message: message2,
+        duration: 4000
+      });
+    }, 3000);
+
+  }).catch(() => {
+    app.proxy.$message({
+      type: 'info',
+      message: '已取消紧急插单'
+    });
+  });
+}
 onUnmounted(() => {
   // 当组件卸载时，清除定时器
   clearInterval(intervalId);

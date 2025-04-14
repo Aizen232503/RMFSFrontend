@@ -36,12 +36,10 @@ export default {
         app.config.globalProperties.getTagType = (value, mode = '') => {
             if (mode === 'order_priority') {
                 switch (value) {
-                    case '高':
+                    case '紧急':
                         return 'danger';
-                    case '中':
+                    case '普通':
                         return 'warning';
-                    case '低':
-                        return 'info';
                     default:
                         return 'primary';
                 }
@@ -66,7 +64,8 @@ export default {
 
                     case '空闲':
                         return 'success';
-
+                    case '故障':
+                        return 'danger';
                     case '待机中':
                         return 'info';
 
@@ -80,6 +79,7 @@ export default {
                 switch (value) {
 
                     case '空闲':
+                    case '可用':
                         return 'success';
 
                     case '故障':

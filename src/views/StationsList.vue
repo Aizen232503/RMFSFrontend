@@ -25,29 +25,29 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="order_id" width="250" label="当前订单" align="center">
-    </el-table-column>
+    <!-- <el-table-column prop="order_id" width="250" label="当前订单" align="center">
+    </el-table-column> -->
 
-    <el-table-column prop="last_updated" label="最后刷新时间" align="center">
+    <el-table-column prop="timestamp" label="创建时间" align="center">
       <template #default="scope">
         <el-icon>
           <Timer />
         </el-icon>
-        <span style="margin-left: 10px">{{ scope.row.last_updated }}</span>
+        <span style="margin-left: 10px">{{ scope.row.timestamp }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column prop="waiting_queue" width="400" label="等待队列" align="center">
-    </el-table-column>
+    <!-- <el-table-column prop="waiting_queue" width="400" label="等待队列" align="center">
+    </el-table-column> -->
 
     <el-table-column label="操作" align="center" width="150" fixed="right">
       <template #default="scope">
         <el-popover trigger="hover" placement="top" width="240px">
           <p>站台ID: {{ scope.row.station_id }}</p>
           <p>状态: {{ scope.row.status }}</p>
-          <p>当前订单: {{ scope.row.order_id }}</p>
-          <p>等待队列: {{ scope.row.waiting_queue }}</p>
-          <p>最后刷新: {{ scope.row.last_updated }}</p>
+          <!-- <p>当前订单: {{ scope.row.order_id }}</p>
+          <p>等待队列: {{ scope.row.waiting_queue }}</p> -->
+          <p>创建时间: {{ scope.row.timestamp }}</p>
           <template #reference class="name-wrapper">
             <el-link type="primary" size="default">查看详情</el-link>
           </template>

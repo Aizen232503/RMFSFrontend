@@ -4,7 +4,7 @@
     <el-row style="margin-top:50px">
       <el-col :span="8" v-for="title in paramsTitles">
         <parameters-board :title="title" :info="paramsInfo[title]"
-          style="width:400px;height:250px;margin:auto"></parameters-board>
+          style="width:400px;height:320px;margin:auto"></parameters-board>
       </el-col>
     </el-row>
   </div>
@@ -74,7 +74,7 @@ const updateParams = async () => {
     type: "success",
     message: "初始化配置成功",
   });
-  eventBus.emit('initializeSystem', { orderCount: 0, robotCount: 10000 });
+  eventBus.emit('initializeSystem', savedParams.value);
   // console.log(params.value)
   // try {
   //   await api.updateParams(params.value)

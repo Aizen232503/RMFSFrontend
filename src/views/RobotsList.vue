@@ -15,7 +15,13 @@
     <el-table-column prop="robot_id" width="150" label="机器人ID" align="center">
     </el-table-column>
 
+    <el-table-column prop="robot_type" width="150" label="机器人类型" align="center">
+    </el-table-column>
+
     <el-table-column prop="order_id" width="250" label="当前订单" align="center">
+      <template v-slot="scope">
+        <p>{{ scope.row.order_id ?? '无' }}</p>
+      </template>
     </el-table-column>
 
     <el-table-column prop="station_id" width="250" label="拣选站" align="center">
@@ -42,10 +48,10 @@
       <template #default="scope">
         <el-popover trigger="hover" placement="top" width="240px">
           <p>机器人ID: {{ scope.row.robot_id }}</p>
+          <p>机器人类型: {{ scope.row.robot_type }}</p>
           <p>当前订单: {{ scope.row.order_id }}</p>
-          <p>所在站台: {{ scope.row.station }}</p>
+          <p>所在站台: {{ scope.row.station_id }}</p>
           <p>状态: {{ scope.row.status }}</p>
-          <p>电量: {{ scope.row.battery }}</p>
           <p>最后刷新: {{ scope.row.last_updated }}</p>
           <template #reference class="name-wrapper">
             <el-link type="primary" size="default">查看详情</el-link>

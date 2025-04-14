@@ -8,7 +8,7 @@ export const useParamsStore = defineStore('params', () => {
         "机器人种类": '单类型',
         "任务生成速率": '中',
         "订单分配方案": '混合分层型-快速',
-        "扰动类型": '紧急插单'
+        "扰动类型": '有'
     })
     const savedParams = ref({
         "场景名称": '场景B',
@@ -16,7 +16,7 @@ export const useParamsStore = defineStore('params', () => {
         "机器人种类": '复合型',
         "任务生成速率": '中',
         "订单分配方案": '混合分层型-快速',
-        "扰动类型": '紧急插单'
+        "扰动类型": '有'
     })
     const paramsInfo = ref({
         "场景名称": {
@@ -65,7 +65,8 @@ export const useParamsStore = defineStore('params', () => {
             options: [
                 { label: '基准类型', value: '基准类型' },
                 { label: '混合分层型-经济', value: '混合分层型-经济' },
-                { label: '混合分层型-快速', value: '混合分层型-快速' }
+                { label: '混合分层型-综合', value: '混合分层型-综合' },
+                { label: '混合分层型-快速', value: '混合分层型-快速' },
             ]
         },
         "扰动类型": {
@@ -73,12 +74,12 @@ export const useParamsStore = defineStore('params', () => {
             type: 'select',
             default: null,
             options: [
+                { label: '有', value: '有' },
                 { label: '无', value: '无' },
-                { label: '紧急插单', value: '紧急插单' },
-                { label: '设备故障', value: '设备故障' }
             ]
         }
     });
+
     return {
         params, savedParams, paramsInfo
     };
