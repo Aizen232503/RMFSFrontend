@@ -2,8 +2,13 @@
 
     <el-menu :default-active="activeMenuIndex" class="el-menu-vertical-demo" router>
         <aYinTechBorderB2 :config="borderConfig">
+            <!-- 插入校徽 -->
 
-            <systemTitleA4 :config="titleConfig">移动机器人履约系统</systemTitleA4>
+            <p class="title">移动机器人履约<br>订单分配系统</p>
+            <div class="logo-container">
+                <img class='logo' src="@/assets/校徽.png" alt="校徽" />
+                <span class='text'>上海交通大学<br>复杂网络与控制实验室</span>
+            </div>
             <template :index="item.path" v-for="item in menuData">
                 <template v-if="item?.children">
                     <el-sub-menu class="menu-item" :index="item.path">
@@ -118,6 +123,39 @@ const currentUser = useUserStore().currentUser
 </script>
 
 <style lang="less" scoped>
+.title {
+    font-size: 24px;
+    line-height: 1.5;
+    font-family: "AliHYAiHei";
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.logo-container {
+    display: flex;
+    /* 使用 flexbox 布局 */
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+    /* 水平居中 */
+    margin: 0 0;
+
+    .logo {
+        width: 80px;
+        /* 校徽宽度 */
+        height: auto;
+        margin-right: 5px;
+        /* 校徽与文字之间的间距 */
+    }
+
+    .text {
+        white-space: normal;
+        /* 允许文字换行 */
+    }
+}
+
 .el-menu {
     h3 {
         text-align: center;
@@ -160,7 +198,7 @@ const currentUser = useUserStore().currentUser
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
+    width: 240px;
     height: 100vh;
     min-height: 400px;
 }
@@ -175,6 +213,6 @@ const currentUser = useUserStore().currentUser
 }
 
 .menu-item:first-of-type {
-    margin-top: 80px;
+    margin-top: 40px;
 }
 </style>

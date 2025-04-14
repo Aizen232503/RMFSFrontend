@@ -2,7 +2,10 @@
   <div id="root-techui" class="root-BG">
     <el-config-provider :value-on-clear="null" :empty-values="[undefined, null]">
       <adaptivePanel :config="{ width: 1920, height: 1080, backgroundName: 'A1', loading: false }">
+        <!-- <el-watermark :width="800" :height="800" :offset="100" :gap="[320, 180]" :zIndex="-1" :font="font" :rotate="0"
+          image='../public/校标-校徽.png'> -->
         <router-view></router-view>
+        <!-- </el-watermark> -->
       </adaptivePanel>
     </el-config-provider>
   </div>
@@ -13,6 +16,8 @@ import { defineComponent } from 'vue';
 defineComponent({
   name: "App",
 });
+
+
 </script>
 
 <style lang="less">

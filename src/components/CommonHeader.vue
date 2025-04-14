@@ -49,7 +49,7 @@ const titleConfig = reactive(
 
 <style lang="less" scoped>
 :deep(.systemTitleA3) {
-    left: 970px
+    left: 1080px
 }
 
 :deep(.system-name) {
