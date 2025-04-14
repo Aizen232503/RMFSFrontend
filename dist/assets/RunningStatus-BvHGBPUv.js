@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{g as s,o,l as r}from"./index-DS3UlKvS.js";const n=""+new URL("0_status-C1t6PHMR.gif",import.meta.url).href,a={},c={class:"gif-container"};function _(i,t){return o(),s("div",c,t[0]||(t[0]=[r("img",{src:n,alt:"运行状态"},null,-1)]))}const m=e(a,[["render",_],["__scopeId","data-v-38413f60"]]);export{m as default};
