@@ -7,8 +7,8 @@
       <el-header class="header">
         <common-header ref="header" :style="{ height: '80px !important' }"></common-header>
       </el-header>
-      <el-watermark :font content="上海交通大学复杂网络与控制实验室" image="/public/校徽20透明度.png" :width="800" :height="800"
-        :offset="[1280, 600]" :gap="[1680, 1080]" :zIndex="100" :rotate="0">
+      <el-watermark :font image="../../校徽20透明度.png" :width="800" :height="800" :offset="[1280, 600]" :gap="[1680, 1080]"
+        :zIndex="100" :rotate="0">
         <el-main class="main">
           <router-view></router-view>
         </el-main>
