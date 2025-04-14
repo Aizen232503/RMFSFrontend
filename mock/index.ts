@@ -408,19 +408,9 @@ const calculateWorkingCondition = (taskParams: Record<string, any>) => {
     };
 }
 // 初始化系统
-export const initializeSystem = (params?: Record<string, any>) => {
+export const initializeSystem = (params: Record<string, any>) => {
     // 从配置中计算相关参数
-    // 如果没有传入参数，则使用默认参数
-    if (!params) {
-        params = {
-            场景名称: '场景A',
-            机器人数量: '小规模',
-            机器人种类: '单类型',
-            任务生成速率: '低',
-            订单分配方案: '基准类型',
-            扰动类型: '无'
-        };
-    }
+
     const { orderCount, robotCount, stationCount, generateSpeed, assignSpeed, processSpeed, maxOrders, ifMixed, ifDisturbed } = calculateTaskParams(params);
     const mixRatio = ifMixed ? 0.15 : 0; // 混合比例
     const disturbRatio = 0
@@ -464,7 +454,7 @@ initializeChunks();
 // autoInitializeSystem(4000, { orderCount: 47, robotCount: 12 });
 // autoInitializeSystem(9000, { orderCount: 32, robotCount: 32 });
 // 初始化系统
-initializeSystem(); // 默认生成 1000 条订单和 10000 台机器人
+// initializeSystem(); // 默认生成 1000 条订单和 10000 台机器人
 
 // 监听事件
 eventBus.on('initializeSystem', (params) => {
